@@ -13,6 +13,9 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/ShoppingCart.API/ShoppingCart.API.csproj", "src/ShoppingCart.API/"]
+COPY ["src/ShoppingCart.Domain/ShoppingCart.Domain.csproj", "src/ShoppingCart.Domain/"]
+COPY ["src/ShoppingCart.Applicaton/ShoppingCart.Applicaton.csproj", "src/ShoppingCart.Applicaton/"]
+COPY ["src/ShoppingCart.Infrastructure/ShoppingCart.Infrastructure.csproj", "src/ShoppingCart.Infrastructure/"]
 RUN dotnet restore "./src/ShoppingCart.API/ShoppingCart.API.csproj"
 COPY . .
 WORKDIR "/src/src/ShoppingCart.API"
