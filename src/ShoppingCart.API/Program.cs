@@ -1,5 +1,5 @@
+using Carter;
 using Serilog;
-using ShoppingCart.API.Endpoints;
 using ShoppingCart.Infrastructure.DI;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +20,9 @@ builder.Services.AddSwaggerGen();
 // Application services
 builder.Services.AddApplicationServices();
 
+// Carter
+builder.Services.AddCarter();
+
 // Infrastructure services
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
@@ -35,8 +38,7 @@ if (app.Environment.IsDevelopment())
 app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 
-// Register endpoints
-app.MapProductEndpoints();
-app.MapCartEndpoints();
+// Register Carter modules
+app.MapCarter();
 
 app.Run();
