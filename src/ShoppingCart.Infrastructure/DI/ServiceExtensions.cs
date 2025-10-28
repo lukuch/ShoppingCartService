@@ -7,8 +7,10 @@ using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http;
+using Npgsql;
 using Polly;
 using Refit;
+using Serilog;
 using ShoppingCart.Application.Behaviors;
 using ShoppingCart.Application.DTOs;
 using ShoppingCart.Application.Interfaces;
@@ -51,15 +53,19 @@ public static class ServiceExtensions
 
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Marten
+        // Ensure database exists (like EF Core's EnsureCreated)
         var connectionString = configuration.GetConnectionString("PostgreSQL");
+        EnsureDatabaseExists(connectionString!);
+
+        // Marten
         services.AddMarten(options =>
         {
             options.Connection(connectionString!);
             options.AutoCreateSchemaObjects = AutoCreate.All;
             options.Events.StreamIdentity = StreamIdentity.AsString;
         })
-        .UseLightweightSessions();
+        .UseLightweightSessions()
+        .ApplyAllDatabaseChangesOnStartup();
 
         // Redis
         var redisConnectionString = configuration.GetConnectionString("Redis");
@@ -84,5 +90,48 @@ public static class ServiceExtensions
         services.AddScoped<ICartRepository, CartRepository>();
 
         return services;
+    }
+
+    private static void EnsureDatabaseExists(string connectionString)
+    {
+        try
+        {
+            // Extract database name from connection string
+            var builder = new NpgsqlConnectionStringBuilder(connectionString);
+            var databaseName = builder.Database;
+            
+            // Connect to postgres database to check/create target database
+            builder.Database = "postgres";
+            
+            using var connection = new NpgsqlConnection(builder.ToString());
+            connection.Open();
+
+            // Check if database exists
+            using var checkCommand = new NpgsqlCommand(
+                "SELECT 1 FROM pg_database WHERE datname = @databaseName", 
+                connection);
+            checkCommand.Parameters.AddWithValue("databaseName", databaseName ?? "shoppingcart");
+            
+            var exists = checkCommand.ExecuteScalar();
+            
+            if (exists == null)
+            {
+                // Create database
+                using var createCommand = new NpgsqlCommand(
+                    $"CREATE DATABASE \"{databaseName ?? "shoppingcart"}\"", 
+                    connection);
+                createCommand.ExecuteNonQuery();
+                Log.Information("Database '{DatabaseName}' created successfully", databaseName);
+            }
+            else
+            {
+                Log.Information("Database '{DatabaseName}' already exists", databaseName);
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Database initialization failed");
+            throw;
+        }
     }
 }
