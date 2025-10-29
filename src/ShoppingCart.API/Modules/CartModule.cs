@@ -59,8 +59,8 @@ public class CartModule : ICarterModule
         var command = new AddItemToCartCommand(userId, dto.ProductId, dto.Quantity);
         var result = await mediator.Send(command, cancellationToken);
 
-        if (!result.Success)
-            return Results.BadRequest(new { error = result.ErrorMessage });
+        if (result.IsFailure)
+            return Results.BadRequest(new { error = result.Error });
 
         return Results.Created($"/api/cart/{userId}/items/{dto.ProductId}", new { message = "Item added successfully" });
     }
@@ -75,8 +75,8 @@ public class CartModule : ICarterModule
         var command = new UpdateCartItemCommand(userId, productId, dto.Quantity);
         var result = await mediator.Send(command, cancellationToken);
 
-        if (!result.Success)
-            return Results.BadRequest(new { error = result.ErrorMessage });
+        if (result.IsFailure)
+            return Results.BadRequest(new { error = result.Error });
 
         return Results.NoContent();
     }
@@ -90,8 +90,8 @@ public class CartModule : ICarterModule
         var command = new RemoveCartItemCommand(userId, productId);
         var result = await mediator.Send(command, cancellationToken);
 
-        if (!result.Success)
-            return Results.BadRequest(new { error = result.ErrorMessage });
+        if (result.IsFailure)
+            return Results.BadRequest(new { error = result.Error });
 
         return Results.NoContent();
     }

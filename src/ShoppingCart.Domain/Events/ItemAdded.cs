@@ -6,4 +6,7 @@ public record ItemAdded(
     string Name,
     decimal UnitPrice,
     int Quantity,
-    DateTime OccurredOn = default) : IDomainEvent;
+    DateTime OccurredOn = default) : IDomainEvent
+{
+    public DateTime OccurredOn { get; init; } = OccurredOn == default ? DateTime.UtcNow : OccurredOn;
+}

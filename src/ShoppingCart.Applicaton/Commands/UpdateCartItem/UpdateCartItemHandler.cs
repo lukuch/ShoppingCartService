@@ -1,6 +1,7 @@
 using MediatR;
 using ShoppingCart.Application.Interfaces;
-using ShoppingCart.Domain.Events;
+using ShoppingCart.Domain.Common;
+using ShoppingCart.Domain.Entities;
 
 namespace ShoppingCart.Application.Commands.UpdateCartItem;
 
@@ -10,24 +11,18 @@ public class UpdateCartItemHandler(ICartRepository cartRepository) : IRequestHan
     {
         try
         {
-            var cart = await cartRepository.GetCartAsync(request.UserId, cancellationToken);
-            if (cart == null || !cart.Items.Any(item => item.ProductId == request.ProductId))
-                return new Result(false, "Cart item not found");
+            var cart = await cartRepository.GetByIdAsync(request.UserId, cancellationToken);
+            if (cart == null)
+                return Result.Failure("Cart not found");
 
-            var @event = new ItemQuantityUpdated(
-                request.UserId,
-                request.ProductId,
-                request.Quantity,
-                DateTime.UtcNow
-            );
+            cart.UpdateItemQuantity(request.ProductId, request.Quantity);
+            await cartRepository.SaveAsync(cart, cancellationToken);
 
-            await cartRepository.SaveEventAsync(@event, cancellationToken);
-
-            return new Result(true);
+            return Result.Success();
         }
         catch (Exception ex)
         {
-            return new Result(false, ex.Message);
+            return Result.Failure(ex.Message);
         }
     }
 }

@@ -1,11 +1,24 @@
 namespace ShoppingCart.Domain.Entities;
 
-public record CartItem
+public class CartItem
 {
-    public required int ProductId { get; init; }
-    public required string Name { get; init; }
-    public required decimal UnitPrice { get; init; }
-    public required int Quantity { get; set; }
+    public int ProductId { get; }
+    public string Name { get; }
+    public decimal UnitPrice { get; }
+    public int Quantity { get; private set; }
 
     public decimal TotalPrice => UnitPrice * Quantity;
+
+    public CartItem(int productId, string name, decimal unitPrice, int quantity)
+    {
+        ProductId = productId;
+        Name = name;
+        UnitPrice = unitPrice;
+        Quantity = quantity;
+    }
+
+    public void UpdateQuantity(int newQuantity)
+    {
+        Quantity = newQuantity;
+    }
 }

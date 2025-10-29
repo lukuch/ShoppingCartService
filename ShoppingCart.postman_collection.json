@@ -1,0 +1,440 @@
+{
+	"info": {
+		"_postman_id": "shopping-cart-api-collection",
+		"name": "Shopping Cart API - Complete Flow",
+		"description": "Complete test collection for the Shopping Cart API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Get All Products",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/products",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"products"
+					]
+				},
+				"description": "Get all available products from the external API"
+			},
+			"response": []
+		},
+		{
+			"name": "2. Get Product by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/products/5",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"products",
+						"5"
+					]
+				},
+				"description": "Get a specific product by ID"
+			},
+			"response": []
+		},
+		{
+			"name": "3. Add Item to Cart - First Item",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"productId\": 1,\n  \"quantity\": 2\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/cart/{{user_id}}/items",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"cart",
+						"{{user_id}}",
+						"items"
+					]
+				},
+				"description": "Add first item to cart (Product ID 1, Quantity 2)"
+			},
+			"response": []
+		},
+		{
+			"name": "4. Add Item to Cart - Second Item",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"productId\": 5,\n  \"quantity\": 1\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/cart/{{user_id}}/items",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"cart",
+						"{{user_id}}",
+						"items"
+					]
+				},
+				"description": "Add second item to cart (Product ID 5, Quantity 1)"
+			},
+			"response": []
+		},
+		{
+			"name": "5. Add Same Item Again (Should Increase Quantity)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"productId\": 1,\n  \"quantity\": 3\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/cart/{{user_id}}/items",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"cart",
+						"{{user_id}}",
+						"items"
+					]
+				},
+				"description": "Add more of the same item (Product ID 1, Quantity 3) - should increase total to 5"
+			},
+			"response": []
+		},
+		{
+			"name": "6. Get Cart Contents",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/cart/{{user_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"cart",
+						"{{user_id}}"
+					]
+				},
+				"description": "Get full cart contents with all items and calculations"
+			},
+			"response": []
+		},
+		{
+			"name": "7. Get Cart Summary",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/cart/{{user_id}}/summary",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"cart",
+						"{{user_id}}",
+						"summary"
+					]
+				},
+				"description": "Get cart summary with totals and item count"
+			},
+			"response": []
+		},
+		{
+			"name": "8. Update Item Quantity",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"quantity\": 10\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/cart/{{user_id}}/items/1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"cart",
+						"{{user_id}}",
+						"items",
+						"1"
+					]
+				},
+				"description": "Update quantity of Product ID 1 to 10"
+			},
+			"response": []
+		},
+		{
+			"name": "9. Get Cart After Update",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/cart/{{user_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"cart",
+						"{{user_id}}"
+					]
+				},
+				"description": "Verify cart contents after quantity update"
+			},
+			"response": []
+		},
+		{
+			"name": "10. Remove Item from Cart",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/cart/{{user_id}}/items/5",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"cart",
+						"{{user_id}}",
+						"items",
+						"5"
+					]
+				},
+				"description": "Remove Product ID 5 from cart"
+			},
+			"response": []
+		},
+		{
+			"name": "11. Get Final Cart State",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/cart/{{user_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"cart",
+						"{{user_id}}"
+					]
+				},
+				"description": "Get final cart state after removing item"
+			},
+			"response": []
+		},
+		{
+			"name": "12. Error Test - Add Invalid Product",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"productId\": 99999,\n  \"quantity\": 1\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/cart/{{user_id}}/items",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"cart",
+						"{{user_id}}",
+						"items"
+					]
+				},
+				"description": "Test error handling with non-existent product"
+			},
+			"response": []
+		},
+		{
+			"name": "13. Error Test - Invalid Quantity",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"productId\": 1,\n  \"quantity\": 0\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/cart/{{user_id}}/items",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"cart",
+						"{{user_id}}",
+						"items"
+					]
+				},
+				"description": "Test validation with zero quantity"
+			},
+			"response": []
+		},
+		{
+			"name": "14. Error Test - Update Non-existent Item",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"quantity\": 5\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/cart/{{user_id}}/items/99999",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"cart",
+						"{{user_id}}",
+						"items",
+						"99999"
+					]
+				},
+				"description": "Test error handling when updating non-existent item"
+			},
+			"response": []
+		},
+		{
+			"name": "15. Error Test - Get Non-existent Cart",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/cart/non-existent-user",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"cart",
+						"non-existent-user"
+					]
+				},
+				"description": "Test 404 response for non-existent cart"
+			},
+			"response": []
+		},
+		{
+			"name": "16. Performance Test - Multiple Users",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"productId\": 6,\n  \"quantity\": 1\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/cart/user-{{$randomInt}}/items",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"cart",
+						"user-{{$randomInt}}",
+						"items"
+					]
+				},
+				"description": "Test with random user ID to simulate multiple users"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Set random user ID if not already set",
+					"if (!pm.environment.get('user_id')) {",
+					"    pm.environment.set('user_id', 'user-' + Math.floor(Math.random() * 1000));",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:5078",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "user-123",
+			"type": "string"
+		}
+	]
+}

@@ -9,7 +9,7 @@ public class GetCartSummaryHandler(ICartRepository cartRepository) : IRequestHan
 {
     public async Task<CartSummaryDto?> Handle(GetCartSummaryQuery request, CancellationToken cancellationToken)
     {
-        var cart = await cartRepository.GetCartAsync(request.UserId, cancellationToken);
+        var cart = await cartRepository.GetByIdAsync(request.UserId, cancellationToken);
         return cart?.Adapt<CartSummaryDto>();
     }
 }

@@ -1,10 +1,9 @@
 using ShoppingCart.Domain.Entities;
-using ShoppingCart.Domain.Events;
 
 namespace ShoppingCart.Application.Interfaces;
 
 public interface ICartRepository
 {
-    Task<Cart?> GetCartAsync(string userId, CancellationToken cancellationToken = default);
-    Task SaveEventAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default);
+    Task<Cart?> GetByIdAsync(string userId, CancellationToken cancellationToken = default);
+    Task SaveAsync(Cart cart, CancellationToken cancellationToken = default);
 }
