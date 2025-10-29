@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingCart.API", "src\ShoppingCart.API\ShoppingCart.API.csproj", "{514D157E-EAF1-47AE-B53C-00E4AFEFFE89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingCart.Applicaton", "src\ShoppingCart.Applicaton\ShoppingCart.Applicaton.csproj", "{B64E4E64-B668-4B19-B3D9-C6A3889E4D9C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingCart.Application", "src\ShoppingCart.Application\ShoppingCart.Application.csproj", "{B64E4E64-B668-4B19-B3D9-C6A3889E4D9C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingCart.Domain", "src\ShoppingCart.Domain\ShoppingCart.Domain.csproj", "{FAC70C04-9F8B-4928-8254-5D6C0219E90C}"
 EndProject
