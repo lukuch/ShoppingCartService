@@ -17,6 +17,11 @@ builder.Host.UseSerilog();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Health Checks
+builder.Services.AddHealthChecks()
+    .AddNpgSql(builder.Configuration.GetConnectionString("PostgreSQL")!)
+    .AddRedis(builder.Configuration.GetConnectionString("Redis")!);
+
 // Application services
 builder.Services.AddApplicationServices();
 
@@ -37,6 +42,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
+
+// Health Checks endpoint
+app.MapHealthChecks("/health");
 
 // Register Carter modules
 app.MapCarter();

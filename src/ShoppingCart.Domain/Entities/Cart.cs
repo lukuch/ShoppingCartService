@@ -7,9 +7,15 @@ public class Cart : AggregateRoot<string>
 {
     private readonly List<CartItem> _items = new();
     
+    // Business rules constants (should be configurable in the future)
+    private const int MaxItemsPerCart = 50;
+    private const int MaxQuantityPerItem = 10;
+    private const decimal MaxCartValue = 10000m;
+    private static readonly decimal TaxRate = 0.23m;
+    
     public IReadOnlyList<CartItem> Items => _items.AsReadOnly();
     public decimal Subtotal => _items.Sum(item => item.TotalPrice);
-    public decimal Tax => Subtotal * 0.23m; // 23% VAT
+    public decimal Tax => Subtotal * TaxRate;
     public decimal Total => Subtotal + Tax;
     public int ItemCount => _items.Sum(item => item.Quantity);
 
@@ -22,8 +28,21 @@ public class Cart : AggregateRoot<string>
 
     public void AddItem(int productId, string productName, decimal unitPrice, int quantity)
     {
+        // Basic validation
         if (quantity <= 0)
             throw new ArgumentException("Quantity must be positive", nameof(quantity));
+            
+        if (quantity > MaxQuantityPerItem)
+            throw new ArgumentException($"Maximum quantity per item is {MaxQuantityPerItem}", nameof(quantity));
+            
+        // Business rule: Cart limits
+        if (_items.Count >= MaxItemsPerCart)
+            throw new InvalidOperationException($"Maximum {MaxItemsPerCart} items allowed per cart");
+            
+        // Business rule: Cart value limits
+        var newItemValue = unitPrice * quantity;
+        if (Subtotal + newItemValue > MaxCartValue)
+            throw new InvalidOperationException($"Cart value cannot exceed {MaxCartValue:C}");
 
         var existingItem = _items.FirstOrDefault(i => i.ProductId == productId);
         if (existingItem != null)
