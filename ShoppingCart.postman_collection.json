@@ -31,14 +31,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{base_url}}/api/products/5",
+					"raw": "{{base_url}}/api/products/{{product_id_1}}",
 					"host": [
 						"{{base_url}}"
 					],
 					"path": [
 						"api",
 						"products",
-						"5"
+						"{{product_id_1}}"
 					]
 				},
 				"description": "Get a specific product by ID"
@@ -57,7 +57,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"productId\": 1,\n  \"quantity\": 2\n}"
+					"raw": "{\n  \"productId\": {{product_id_1}},\n  \"quantity\": {{quantity_item1}}\n}"
 				},
 				"url": {
 					"raw": "{{base_url}}/api/cart/{{user_id}}/items",
@@ -87,7 +87,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"productId\": 5,\n  \"quantity\": 1\n}"
+					"raw": "{\n  \"productId\": {{product_id_2}},\n  \"quantity\": {{quantity_item2}}\n}"
 				},
 				"url": {
 					"raw": "{{base_url}}/api/cart/{{user_id}}/items",
@@ -117,7 +117,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"productId\": 1,\n  \"quantity\": 3\n}"
+					"raw": "{\n  \"productId\": {{product_id_1}},\n  \"quantity\": {{quantity_item1_repeat}}\n}"
 				},
 				"url": {
 					"raw": "{{base_url}}/api/cart/{{user_id}}/items",
@@ -188,10 +188,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"quantity\": 10\n}"
+					"raw": "{\n  \"quantity\": {{quantity_update}}\n}"
 				},
 				"url": {
-					"raw": "{{base_url}}/api/cart/{{user_id}}/items/1",
+					"raw": "{{base_url}}/api/cart/{{user_id}}/items/{{product_id_1}}",
 					"host": [
 						"{{base_url}}"
 					],
@@ -200,7 +200,7 @@
 						"cart",
 						"{{user_id}}",
 						"items",
-						"1"
+						"{{product_id_1}}"
 					]
 				},
 				"description": "Update quantity of Product ID 1 to 10"
@@ -233,7 +233,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{base_url}}/api/cart/{{user_id}}/items/5",
+					"raw": "{{base_url}}/api/cart/{{user_id}}/items/{{product_id_2}}",
 					"host": [
 						"{{base_url}}"
 					],
@@ -242,7 +242,7 @@
 						"cart",
 						"{{user_id}}",
 						"items",
-						"5"
+						"{{product_id_2}}"
 					]
 				},
 				"description": "Remove Product ID 5 from cart"
@@ -281,7 +281,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"productId\": 99999,\n  \"quantity\": 1\n}"
+					"raw": "{\n  \"productId\": {{invalid_product_id}},\n  \"quantity\": 1\n}"
 				},
 				"url": {
 					"raw": "{{base_url}}/api/cart/{{user_id}}/items",
@@ -311,7 +311,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"productId\": 1,\n  \"quantity\": 0\n}"
+					"raw": "{\n  \"productId\": {{product_id_1}},\n  \"quantity\": 0\n}"
 				},
 				"url": {
 					"raw": "{{base_url}}/api/cart/{{user_id}}/items",
@@ -344,7 +344,7 @@
 					"raw": "{\n  \"quantity\": 5\n}"
 				},
 				"url": {
-					"raw": "{{base_url}}/api/cart/{{user_id}}/items/99999",
+					"raw": "{{base_url}}/api/cart/{{user_id}}/items/{{invalid_product_id}}",
 					"host": [
 						"{{base_url}}"
 					],
@@ -353,7 +353,7 @@
 						"cart",
 						"{{user_id}}",
 						"items",
-						"99999"
+						"{{invalid_product_id}}"
 					]
 				},
 				"description": "Test error handling when updating non-existent item"
@@ -392,7 +392,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"productId\": 6,\n  \"quantity\": 1\n}"
+					"raw": "{\n  \"productId\": {{product_id_3}},\n  \"quantity\": 1\n}"
 				},
 				"url": {
 					"raw": "{{base_url}}/api/cart/user-{{$randomInt}}/items",
@@ -411,29 +411,56 @@
 			"response": []
 		}
 	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					"// Set random user ID if not already set",
-					"if (!pm.environment.get('user_id')) {",
-					"    pm.environment.set('user_id', 'user-' + Math.floor(Math.random() * 1000));",
-					"}"
-				]
-			}
-		}
-	],
+	"event": [],
 	"variable": [
 		{
 			"key": "base_url",
-			"value": "http://localhost:5078",
+			"value": "http://localhost:8080",
 			"type": "string"
 		},
 		{
 			"key": "user_id",
 			"value": "user-123",
+			"type": "string"
+		},
+		{
+			"key": "product_id_1",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "product_id_2",
+			"value": "2",
+			"type": "string"
+		},
+		{
+			"key": "product_id_3",
+			"value": "3",
+			"type": "string"
+		},
+		{
+			"key": "invalid_product_id",
+			"value": "99999",
+			"type": "string"
+		},
+		{
+			"key": "quantity_item1",
+			"value": "2",
+			"type": "string"
+		},
+		{
+			"key": "quantity_item2",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "quantity_item1_repeat",
+			"value": "3",
+			"type": "string"
+		},
+		{
+			"key": "quantity_update",
+			"value": "10",
 			"type": "string"
 		}
 	]

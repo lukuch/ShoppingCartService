@@ -76,11 +76,10 @@ public static class ServiceExtensions
         // Refit for external API
         var productApiBaseUrl = configuration["ProductApi:BaseUrl"] ?? "https://fakeapi.platzi.com";
         services.AddRefitClient<IProductApi>()
-            .AddHttpMessageHandler(() => new PolicyHttpMessageHandler(
-                Policy
-                    .HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
-                    .Or<HttpRequestException>()
-                    .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))))
+            .AddPolicyHandler(
+                Polly.Extensions.Http.HttpPolicyExtensions
+                    .HandleTransientHttpError() // 5xx, 408, HttpRequestException
+                    .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)))
             )
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(productApiBaseUrl));
 

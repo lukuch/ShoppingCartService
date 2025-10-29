@@ -3,6 +3,8 @@ using MediatR;
 using ShoppingCart.Application.DTOs;
 using ShoppingCart.Application.Interfaces;
 using ShoppingCart.Application.Queries.GetProducts;
+using Refit;
+using System.Text;
 
 namespace ShoppingCart.API.Modules;
 
@@ -30,9 +32,16 @@ public class ProductModule : ICarterModule
         IMediator mediator,
         CancellationToken cancellationToken)
     {
-        var query = new GetProductsQuery();
-        var products = await mediator.Send(query, cancellationToken);
-        return Results.Ok(products);
+        try
+        {
+            var query = new GetProductsQuery();
+            var products = await mediator.Send(query, cancellationToken);
+            return Results.Ok(products);
+        }
+        catch (ApiException apiEx)
+        {
+            return ProxyApiException(apiEx);
+        }
     }
 
     private static async Task<IResult> GetProduct(
@@ -40,10 +49,24 @@ public class ProductModule : ICarterModule
         IProductService productService,
         CancellationToken cancellationToken)
     {
-        var product = await productService.GetProductByIdAsync(id, cancellationToken);
-        if (product == null)
-            return Results.NotFound();
-        
-        return Results.Ok(product);
+        try
+        {
+            var product = await productService.GetProductByIdAsync(id, cancellationToken);
+            if (product == null)
+                return Results.NotFound();
+            
+            return Results.Ok(product);
+        }
+        catch (ApiException apiEx)
+        {
+            return ProxyApiException(apiEx);
+        }
+    }
+    
+    private static IResult ProxyApiException(ApiException apiEx)
+    {
+        var content = apiEx.Content ?? string.Empty;
+        var status = (int)apiEx.StatusCode;
+        return Results.Content(content, "application/json", Encoding.UTF8, status);
     }
 }
