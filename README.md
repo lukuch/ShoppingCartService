@@ -20,7 +20,7 @@ A .NET 8 backend service that integrates with the Platzi Fake Store API to let u
 ## Architecture
 
 - Domain-Driven Design (DDD): Business logic centers on the `Cart` aggregate (and `CartItem`) in `ShoppingCart.Domain`, enforced through explicit invariants and domain events.
-- Clean Architecture: Clear boundaries (`API` → `Application` → `Domain` → `Infrastructure`) with dependencies pointing inward; the `Application` layer defines ports like `IProductService` and `ICartRepository`.
+- Clean Architecture: Clear boundaries with dependencies pointing inward (Infrastructure → Application → Domain).
 - Event Sourcing (Marten): The `Cart` emits events (`ItemAdded`, `ItemQuantityUpdated`, `ItemRemoved`) and applies them via `Apply(...)`. Marten persists event streams and rehydrates aggregate state.
 
 ## Getting Started
